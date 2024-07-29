@@ -25,46 +25,47 @@ Gimbal::Gimbal(std::shared_ptr<System> system) :
 Gimbal::~Gimbal() {}
 
 void Gimbal::set_angles_async(
-    float roll_deg, float pitch_deg, float yaw_deg, const ResultCallback callback)
+    float roll_deg,
+    float pitch_deg,
+    float yaw_deg,
+    GimbalMode gimbal_mode,
+    SendMode send_mode,
+    const ResultCallback callback)
 {
-    _impl->set_angles_async(roll_deg, pitch_deg, yaw_deg, callback);
+    _impl->set_angles_async(roll_deg, pitch_deg, yaw_deg, gimbal_mode, send_mode, callback);
 }
 
-Gimbal::Result Gimbal::set_angles(float roll_deg, float pitch_deg, float yaw_deg) const
+Gimbal::Result Gimbal::set_angles(
+    float roll_deg,
+    float pitch_deg,
+    float yaw_deg,
+    GimbalMode gimbal_mode,
+    SendMode send_mode) const
 {
-    return _impl->set_angles(roll_deg, pitch_deg, yaw_deg);
+    return _impl->set_angles(roll_deg, pitch_deg, yaw_deg, gimbal_mode, send_mode);
 }
 
-void Gimbal::set_pitch_and_yaw_async(float pitch_deg, float yaw_deg, const ResultCallback callback)
+void Gimbal::set_angular_rates_async(
+    float roll_rate_deg_s,
+    float pitch_rate_deg_s,
+    float yaw_rate_deg_s,
+    GimbalMode gimbal_mode,
+    SendMode send_mode,
+    const ResultCallback callback)
 {
-    _impl->set_pitch_and_yaw_async(pitch_deg, yaw_deg, callback);
+    _impl->set_angular_rates_async(
+        roll_rate_deg_s, pitch_rate_deg_s, yaw_rate_deg_s, gimbal_mode, send_mode, callback);
 }
 
-Gimbal::Result Gimbal::set_pitch_and_yaw(float pitch_deg, float yaw_deg) const
+Gimbal::Result Gimbal::set_angular_rates(
+    float roll_rate_deg_s,
+    float pitch_rate_deg_s,
+    float yaw_rate_deg_s,
+    GimbalMode gimbal_mode,
+    SendMode send_mode) const
 {
-    return _impl->set_pitch_and_yaw(pitch_deg, yaw_deg);
-}
-
-void Gimbal::set_pitch_rate_and_yaw_rate_async(
-    float pitch_rate_deg_s, float yaw_rate_deg_s, const ResultCallback callback)
-{
-    _impl->set_pitch_rate_and_yaw_rate_async(pitch_rate_deg_s, yaw_rate_deg_s, callback);
-}
-
-Gimbal::Result
-Gimbal::set_pitch_rate_and_yaw_rate(float pitch_rate_deg_s, float yaw_rate_deg_s) const
-{
-    return _impl->set_pitch_rate_and_yaw_rate(pitch_rate_deg_s, yaw_rate_deg_s);
-}
-
-void Gimbal::set_mode_async(GimbalMode gimbal_mode, const ResultCallback callback)
-{
-    _impl->set_mode_async(gimbal_mode, callback);
-}
-
-Gimbal::Result Gimbal::set_mode(GimbalMode gimbal_mode) const
-{
-    return _impl->set_mode(gimbal_mode);
+    return _impl->set_angular_rates(
+        roll_rate_deg_s, pitch_rate_deg_s, yaw_rate_deg_s, gimbal_mode, send_mode);
 }
 
 void Gimbal::set_roi_location_async(
@@ -251,6 +252,8 @@ std::ostream& operator<<(std::ostream& str, Gimbal::Result const& result)
             return str << "Unsupported";
         case Gimbal::Result::NoSystem:
             return str << "No System";
+        case Gimbal::Result::InvalidArgument:
+            return str << "Invalid Argument";
         default:
             return str << "Unknown";
     }
@@ -277,6 +280,18 @@ std::ostream& operator<<(std::ostream& str, Gimbal::ControlMode const& control_m
             return str << "Primary";
         case Gimbal::ControlMode::Secondary:
             return str << "Secondary";
+        default:
+            return str << "Unknown";
+    }
+}
+
+std::ostream& operator<<(std::ostream& str, Gimbal::SendMode const& send_mode)
+{
+    switch (send_mode) {
+        case Gimbal::SendMode::Once:
+            return str << "Once";
+        case Gimbal::SendMode::Stream:
+            return str << "Stream";
         default:
             return str << "Unknown";
     }

@@ -90,6 +90,23 @@ public:
     friend std::ostream& operator<<(std::ostream& str, Gimbal::ControlMode const& control_mode);
 
     /**
+     * @brief
+     */
+    enum class SendMode {
+        Once, /**< @brief Send command exactly once with quality of service (use for sporadic
+                 commands slower than 1 Hz). */
+        Stream, /**< @brief Stream setpoint without quality of service (use for setpoints faster
+                   than 1 Hz).. */
+    };
+
+    /**
+     * @brief Stream operator to print information about a `Gimbal::SendMode`.
+     *
+     * @return A reference to the stream.
+     */
+    friend std::ostream& operator<<(std::ostream& str, Gimbal::SendMode const& send_mode);
+
+    /**
      * @brief Quaternion type.
      *
      * All rotations and axis systems follow the right-hand rule.
@@ -243,6 +260,7 @@ public:
         Timeout, /**< @brief Command timed out. */
         Unsupported, /**< @brief Functionality not supported. */
         NoSystem, /**< @brief No system connected. */
+        InvalidArgument, /**< @brief Invalid argument. */
     };
 
     /**
@@ -264,10 +282,17 @@ public:
      * Will return when the command is accepted, however, it might
      * take the gimbal longer to actually be set to the new angles.
      *
+     * Note that the roll angle needs to be set to 0 when send_mode is Once.
+     *
      * This function is non-blocking. See 'set_angles' for the blocking counterpart.
      */
-    void
-    set_angles_async(float roll_deg, float pitch_deg, float yaw_deg, const ResultCallback callback);
+    void set_angles_async(
+        float roll_deg,
+        float pitch_deg,
+        float yaw_deg,
+        GimbalMode gimbal_mode,
+        SendMode send_mode,
+        const ResultCallback callback);
 
     /**
      * @brief Set gimbal roll, pitch and yaw angles.
@@ -276,86 +301,57 @@ public:
      * Will return when the command is accepted, however, it might
      * take the gimbal longer to actually be set to the new angles.
      *
+     * Note that the roll angle needs to be set to 0 when send_mode is Once.
+     *
      * This function is blocking. See 'set_angles_async' for the non-blocking counterpart.
      *
      * @return Result of request.
      */
-    Result set_angles(float roll_deg, float pitch_deg, float yaw_deg) const;
+    Result set_angles(
+        float roll_deg,
+        float pitch_deg,
+        float yaw_deg,
+        GimbalMode gimbal_mode,
+        SendMode send_mode) const;
 
     /**
-     * @brief Set gimbal pitch and yaw angles.
+     * @brief Set gimbal angular rates.
      *
-     * This sets the desired pitch and yaw angles of a gimbal.
-     * Will return when the command is accepted, however, it might
-     * take the gimbal longer to actually be set to the new angles.
-     *
-     * This function is non-blocking. See 'set_pitch_and_yaw' for the blocking counterpart.
-     */
-    void set_pitch_and_yaw_async(float pitch_deg, float yaw_deg, const ResultCallback callback);
-
-    /**
-     * @brief Set gimbal pitch and yaw angles.
-     *
-     * This sets the desired pitch and yaw angles of a gimbal.
-     * Will return when the command is accepted, however, it might
-     * take the gimbal longer to actually be set to the new angles.
-     *
-     * This function is blocking. See 'set_pitch_and_yaw_async' for the non-blocking counterpart.
-     *
-     * @return Result of request.
-     */
-    Result set_pitch_and_yaw(float pitch_deg, float yaw_deg) const;
-
-    /**
-     * @brief Set gimbal angular rates around pitch and yaw axes.
-     *
-     * This sets the desired angular rates around pitch and yaw axes of a gimbal.
+     * This sets the desired angular rates around roll, pitch and yaw axes of a gimbal.
      * Will return when the command is accepted, however, it might
      * take the gimbal longer to actually reach the angular rate.
      *
-     * This function is non-blocking. See 'set_pitch_rate_and_yaw_rate' for the blocking
-     * counterpart.
+     * Note that the roll angle needs to be set to 0 when send_mode is Once.
+     *
+     * This function is non-blocking. See 'set_angular_rates' for the blocking counterpart.
      */
-    void set_pitch_rate_and_yaw_rate_async(
-        float pitch_rate_deg_s, float yaw_rate_deg_s, const ResultCallback callback);
+    void set_angular_rates_async(
+        float roll_rate_deg_s,
+        float pitch_rate_deg_s,
+        float yaw_rate_deg_s,
+        GimbalMode gimbal_mode,
+        SendMode send_mode,
+        const ResultCallback callback);
 
     /**
-     * @brief Set gimbal angular rates around pitch and yaw axes.
+     * @brief Set gimbal angular rates.
      *
-     * This sets the desired angular rates around pitch and yaw axes of a gimbal.
+     * This sets the desired angular rates around roll, pitch and yaw axes of a gimbal.
      * Will return when the command is accepted, however, it might
      * take the gimbal longer to actually reach the angular rate.
      *
-     * This function is blocking. See 'set_pitch_rate_and_yaw_rate_async' for the non-blocking
-     * counterpart.
+     * Note that the roll angle needs to be set to 0 when send_mode is Once.
+     *
+     * This function is blocking. See 'set_angular_rates_async' for the non-blocking counterpart.
      *
      * @return Result of request.
      */
-    Result set_pitch_rate_and_yaw_rate(float pitch_rate_deg_s, float yaw_rate_deg_s) const;
-
-    /**
-     * @brief Set gimbal mode.
-     *
-     * This sets the desired yaw mode of a gimbal.
-     * Will return when the command is accepted. However, it might
-     * take the gimbal longer to actually be set to the new angles.
-     *
-     * This function is non-blocking. See 'set_mode' for the blocking counterpart.
-     */
-    void set_mode_async(GimbalMode gimbal_mode, const ResultCallback callback);
-
-    /**
-     * @brief Set gimbal mode.
-     *
-     * This sets the desired yaw mode of a gimbal.
-     * Will return when the command is accepted. However, it might
-     * take the gimbal longer to actually be set to the new angles.
-     *
-     * This function is blocking. See 'set_mode_async' for the non-blocking counterpart.
-     *
-     * @return Result of request.
-     */
-    Result set_mode(GimbalMode gimbal_mode) const;
+    Result set_angular_rates(
+        float roll_rate_deg_s,
+        float pitch_rate_deg_s,
+        float yaw_rate_deg_s,
+        GimbalMode gimbal_mode,
+        SendMode send_mode) const;
 
     /**
      * @brief Set gimbal region of interest (ROI).

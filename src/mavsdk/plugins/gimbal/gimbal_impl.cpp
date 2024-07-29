@@ -223,7 +223,47 @@ void GimbalImpl::process_attitude(const mavlink_message_t& message)
     _vehicle_yaw_rad = attitude.yaw;
 }
 
-Gimbal::Result GimbalImpl::set_angles(float roll_deg, float pitch_deg, float yaw_deg)
+Gimbal::Result GimbalImpl::set_angles(
+    float roll_deg,
+    float pitch_deg,
+    float yaw_deg,
+    Gimbal::GimbalMode gimbal_mode,
+    Gimbal::SendMode send_mode)
+{
+    auto prom = std::promise<Gimbal::Result>();
+    auto fut = prom.get_future();
+
+    set_angles_async_internal(
+        roll_deg, pitch_deg, yaw_deg, gimbal_mode, send_mode, [&prom](Gimbal::Result result) {
+            prom.set_value(result);
+        });
+
+    return fut.get();
+}
+
+void GimbalImpl::set_angles_async(
+    float roll_deg,
+    float pitch_deg,
+    float yaw_deg,
+    Gimbal::GimbalMode gimbal_mode,
+    Gimbal::SendMode send_mode,
+    Gimbal::ResultCallback callback)
+{
+    set_angles_async_internal(
+        roll_deg, pitch_deg, yaw_deg, gimbal_mode, send_mode, [this, callback](auto result) {
+            if (callback) {
+                _system_impl->call_user_callback([callback, result]() { callback(result); });
+            }
+        });
+}
+
+void GimbalImpl::set_angles_async_internal(
+    float roll_deg,
+    float pitch_deg,
+    float yaw_deg,
+    Gimbal::GimbalMode gimbal_mode,
+    Gimbal::SendMode send_mode,
+    Gimbal::ResultCallback callback)
 {
     const float roll_rad = to_rad_from_deg(roll_deg);
     const float pitch_rad = to_rad_from_deg(pitch_deg);
@@ -236,116 +276,184 @@ Gimbal::Result GimbalImpl::set_angles(float roll_deg, float pitch_deg, float yaw
 
     const uint32_t flags =
         GIMBAL_MANAGER_FLAGS_ROLL_LOCK | GIMBAL_MANAGER_FLAGS_PITCH_LOCK |
-        ((_gimbal_mode == Gimbal::GimbalMode::YawLock) ? GIMBAL_MANAGER_FLAGS_YAW_LOCK : 0);
+        ((gimbal_mode == Gimbal::GimbalMode::YawLock) ? GIMBAL_MANAGER_FLAGS_YAW_LOCK : 0);
 
-    return _system_impl->queue_message([&](MavlinkAddress mavlink_address, uint8_t channel) {
-        mavlink_message_t message;
-        mavlink_msg_gimbal_manager_set_attitude_pack_chan(
-            mavlink_address.system_id,
-            mavlink_address.component_id,
-            channel,
-            &message,
-            _gimbal_manager_sysid,
-            _gimbal_manager_compid,
-            flags,
-            _gimbal_device_id,
-            quaternion,
-            NAN,
-            NAN,
-            NAN);
-        return message;
-    }) ?
-               Gimbal::Result::Success :
-               Gimbal::Result::Error;
-}
+    switch (send_mode) {
+        case Gimbal::SendMode::Stream: {
+            auto result =
+                _system_impl->queue_message([&](MavlinkAddress mavlink_address, uint8_t channel) {
+                    mavlink_message_t message;
+                    mavlink_msg_gimbal_manager_set_attitude_pack_chan(
+                        mavlink_address.system_id,
+                        mavlink_address.component_id,
+                        channel,
+                        &message,
+                        _gimbal_manager_sysid,
+                        _gimbal_manager_compid,
+                        flags,
+                        _gimbal_device_id,
+                        quaternion,
+                        NAN,
+                        NAN,
+                        NAN);
+                    return message;
+                }) ?
+                    Gimbal::Result::Success :
+                    Gimbal::Result::Error;
+            if (callback) {
+                callback(result);
+            }
+        } break;
+        case Gimbal::SendMode::Once:
+            if (roll_deg != 0.0f) {
+                LogWarn() << "Roll needs to be 0 for SendMode::Once.";
+                if (callback) {
+                    callback(Gimbal::Result::InvalidArgument);
+                }
 
-void GimbalImpl::set_angles_async(
-    float roll_deg, float pitch_deg, float yaw_deg, Gimbal::ResultCallback callback)
-{
-    // Sending the message should be quick and we can just do that straighaway.
-    Gimbal::Result result = set_angles(roll_deg, pitch_deg, yaw_deg);
+            } else {
+                MavlinkCommandSender::CommandInt command{};
 
-    std::lock_guard<std::mutex> lock(_mutex);
+                command.command = MAV_CMD_DO_GIMBAL_MANAGER_PITCHYAW;
+                command.params.maybe_param1 = pitch_deg;
+                command.params.maybe_param2 = yaw_deg;
+                command.params.maybe_param3 = NAN;
+                command.params.maybe_param4 = NAN;
+                command.params.x = flags;
+                command.params.maybe_z = _gimbal_device_id;
+                command.target_system_id = _gimbal_manager_sysid;
+                command.target_component_id = _gimbal_manager_compid;
 
-    if (callback) {
-        _system_impl->call_user_callback([callback, result]() { callback(result); });
+                _system_impl->send_command_async(
+                    command, [callback](MavlinkCommandSender::Result result, float) {
+                        receive_command_result(result, callback);
+                    });
+            }
+            break;
+        default:
+            LogErr() << "Invalid send mode";
+            if (callback) {
+                callback(Gimbal::Result::InvalidArgument);
+            }
+            break;
     }
 }
 
-Gimbal::Result GimbalImpl::set_pitch_and_yaw(float pitch_deg, float yaw_deg)
+Gimbal::Result GimbalImpl::set_angular_rates(
+    float roll_rate_deg_s,
+    float pitch_rate_deg_s,
+    float yaw_rate_deg_s,
+    Gimbal::GimbalMode gimbal_mode,
+    Gimbal::SendMode send_mode)
 {
-    return set_angles(0.0f, pitch_deg, yaw_deg);
+    auto prom = std::promise<Gimbal::Result>();
+    auto fut = prom.get_future();
+
+    set_angular_rates_async_internal(
+        roll_rate_deg_s,
+        pitch_rate_deg_s,
+        yaw_rate_deg_s,
+        gimbal_mode,
+        send_mode,
+        [&prom](Gimbal::Result result) { prom.set_value(result); });
+
+    return fut.get();
 }
 
-void GimbalImpl::set_pitch_and_yaw_async(
-    float pitch_deg, float yaw_deg, Gimbal::ResultCallback callback)
+void GimbalImpl::set_angular_rates_async(
+    float roll_rate_deg_s,
+    float pitch_rate_deg_s,
+    float yaw_rate_deg_s,
+    Gimbal::GimbalMode gimbal_mode,
+    Gimbal::SendMode send_mode,
+    Gimbal::ResultCallback callback)
 {
-    // Sending the message should be quick and we can just do that straighaway.
-    set_angles_async(0.0f, pitch_deg, yaw_deg, callback);
+    set_angular_rates_async_internal(
+        roll_rate_deg_s,
+        pitch_rate_deg_s,
+        yaw_rate_deg_s,
+        gimbal_mode,
+        send_mode,
+        [this, callback](auto result) {
+            if (callback) {
+                _system_impl->call_user_callback([callback, result]() { callback(result); });
+            }
+        });
 }
 
-Gimbal::Result GimbalImpl::set_pitch_rate_and_yaw_rate(float pitch_rate_deg_s, float yaw_rate_deg_s)
+void GimbalImpl::set_angular_rates_async_internal(
+    float roll_rate_deg_s,
+    float pitch_rate_deg_s,
+    float yaw_rate_deg_s,
+    Gimbal::GimbalMode gimbal_mode,
+    Gimbal::SendMode send_mode,
+    Gimbal::ResultCallback callback)
 {
     std::lock_guard<std::mutex> lock(_mutex);
 
     const uint32_t flags =
         GIMBAL_MANAGER_FLAGS_ROLL_LOCK | GIMBAL_MANAGER_FLAGS_PITCH_LOCK |
-        ((_gimbal_mode == Gimbal::GimbalMode::YawLock) ? GIMBAL_MANAGER_FLAGS_YAW_LOCK : 0);
+        ((gimbal_mode == Gimbal::GimbalMode::YawLock) ? GIMBAL_MANAGER_FLAGS_YAW_LOCK : 0);
 
-    const float quaternion[4] = {NAN, NAN, NAN, NAN};
+    switch (send_mode) {
+        case Gimbal::SendMode::Stream: {
+            const float quaternion[4] = {NAN, NAN, NAN, NAN};
 
-    return _system_impl->queue_message([&](MavlinkAddress mavlink_address, uint8_t channel) {
-        mavlink_message_t message;
-        mavlink_msg_gimbal_manager_set_attitude_pack_chan(
-            mavlink_address.system_id,
-            mavlink_address.component_id,
-            channel,
-            &message,
-            _gimbal_manager_sysid,
-            _gimbal_manager_compid,
-            flags,
-            _gimbal_device_id,
-            quaternion,
-            0.0f,
-            to_rad_from_deg(pitch_rate_deg_s),
-            to_rad_from_deg(yaw_rate_deg_s));
-        return message;
-    }) ?
-               Gimbal::Result::Success :
-               Gimbal::Result::Error;
-}
+            auto result =
+                _system_impl->queue_message([&](MavlinkAddress mavlink_address, uint8_t channel) {
+                    mavlink_message_t message;
+                    mavlink_msg_gimbal_manager_set_attitude_pack_chan(
+                        mavlink_address.system_id,
+                        mavlink_address.component_id,
+                        channel,
+                        &message,
+                        _gimbal_manager_sysid,
+                        _gimbal_manager_compid,
+                        flags,
+                        _gimbal_device_id,
+                        quaternion,
+                        to_rad_from_deg(roll_rate_deg_s),
+                        to_rad_from_deg(pitch_rate_deg_s),
+                        to_rad_from_deg(yaw_rate_deg_s));
+                    return message;
+                }) ?
+                    Gimbal::Result::Success :
+                    Gimbal::Result::Error;
+            if (callback) {
+                callback(result);
+            }
+            break;
+        }
+        case Gimbal::SendMode::Once:
+            if (roll_rate_deg_s != 0.0f) {
+                LogWarn() << "Roll rate needs to be 0 for SendMode::Once.";
+                if (callback) {
+                    callback(Gimbal::Result::InvalidArgument);
+                }
 
-void GimbalImpl::set_pitch_rate_and_yaw_rate_async(
-    float pitch_rate_deg_s, float yaw_rate_deg_s, Gimbal::ResultCallback callback)
-{
-    // Sending the message should be quick and we can just do that straighaway.
-    Gimbal::Result result = set_pitch_rate_and_yaw_rate(pitch_rate_deg_s, yaw_rate_deg_s);
+            } else {
+                MavlinkCommandSender::CommandInt command{};
 
-    std::lock_guard<std::mutex> lock(_mutex);
+                command.command = MAV_CMD_DO_GIMBAL_MANAGER_PITCHYAW;
+                command.params.maybe_param1 = NAN;
+                command.params.maybe_param2 = NAN;
+                command.params.maybe_param3 = pitch_rate_deg_s;
+                command.params.maybe_param4 = yaw_rate_deg_s;
+                command.params.x = flags;
+                command.params.maybe_z = _gimbal_device_id;
+                command.target_system_id = _gimbal_manager_sysid;
+                command.target_component_id = _gimbal_manager_compid;
 
-    if (callback) {
-        auto temp_callback = callback;
-        _system_impl->call_user_callback([temp_callback, result]() { temp_callback(result); });
-    }
-}
-
-Gimbal::Result GimbalImpl::set_mode(const Gimbal::GimbalMode gimbal_mode)
-{
-    std::lock_guard<std::mutex> lock(_mutex);
-
-    _gimbal_mode = gimbal_mode;
-    return Gimbal::Result::Success;
-}
-
-void GimbalImpl::set_mode_async(
-    const Gimbal::GimbalMode gimbal_mode, Gimbal::ResultCallback callback)
-{
-    std::lock_guard<std::mutex> lock(_mutex);
-
-    _gimbal_mode = gimbal_mode;
-
-    if (callback) {
-        _system_impl->call_user_callback([callback]() { callback(Gimbal::Result::Success); });
+                _system_impl->send_command_async(
+                    command, [callback](MavlinkCommandSender::Result result, float) {
+                        receive_command_result(result, callback);
+                    });
+            }
+            break;
+        default:
+            LogErr() << "Invalid send mode";
+            callback(Gimbal::Result::InvalidArgument);
+            break;
     }
 }
 

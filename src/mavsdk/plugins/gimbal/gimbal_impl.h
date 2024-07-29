@@ -19,20 +19,33 @@ public:
     void enable() override;
     void disable() override;
 
-    Gimbal::Result set_angles(float roll_deg, float pitch_deg, float yaw_deg);
+    Gimbal::Result set_angles(
+        float roll_deg,
+        float pitch_deg,
+        float yaw_deg,
+        Gimbal::GimbalMode gimbal_mode,
+        Gimbal::SendMode send_mode);
     void set_angles_async(
-        float roll_deg, float pitch_deg, float yaw_deg, Gimbal::ResultCallback callback);
+        float roll_deg,
+        float pitch_deg,
+        float yaw_deg,
+        Gimbal::GimbalMode gimbal_mode,
+        Gimbal::SendMode send_mode,
+        Gimbal::ResultCallback callback);
 
-    Gimbal::Result set_pitch_and_yaw(float pitch_deg, float yaw_deg);
-    void set_pitch_and_yaw_async(float pitch_deg, float yaw_deg, Gimbal::ResultCallback callback);
-
-    Gimbal::Result set_pitch_rate_and_yaw_rate(float pitch_rate_deg_s, float yaw_rate_deg_s);
-
-    void set_pitch_rate_and_yaw_rate_async(
-        float pitch_rate_deg_s, float yaw_rate_deg_s, Gimbal::ResultCallback callback);
-
-    Gimbal::Result set_mode(const Gimbal::GimbalMode gimbal_mode);
-    void set_mode_async(const Gimbal::GimbalMode gimbal_mode, Gimbal::ResultCallback callback);
+    Gimbal::Result set_angular_rates(
+        float roll_rate_deg,
+        float pitch_rate_deg,
+        float yaw_rate_deg,
+        Gimbal::GimbalMode gimbal_mode,
+        Gimbal::SendMode send_mode);
+    void set_angular_rates_async(
+        float roll_rate_deg,
+        float pitch_rate_deg,
+        float yaw_rate_deg,
+        Gimbal::GimbalMode gimbal_mode,
+        Gimbal::SendMode send_mode,
+        Gimbal::ResultCallback callback);
 
     Gimbal::Result set_roi_location(double latitude_deg, double longitude_deg, float altitude_m);
     void set_roi_location_async(
@@ -73,6 +86,22 @@ private:
     void process_gimbal_device_attitude_status(const mavlink_message_t& message);
     void process_attitude(const mavlink_message_t& message);
 
+    void set_angles_async_internal(
+        float roll_deg,
+        float pitch_deg,
+        float yaw_deg,
+        Gimbal::GimbalMode gimbal_mode,
+        Gimbal::SendMode send_mode,
+        Gimbal::ResultCallback callback);
+
+    void set_angular_rates_async_internal(
+        float roll_rate_deg,
+        float pitch_rate_deg,
+        float yaw_rate_deg,
+        Gimbal::GimbalMode gimbal_mode,
+        Gimbal::SendMode send_mode,
+        Gimbal::ResultCallback callback);
+
     std::mutex _mutex{};
     CallbackList<Gimbal::ControlStatus> _control_subscriptions{};
     CallbackList<Gimbal::Attitude> _attitude_subscriptions{};
@@ -81,7 +110,6 @@ private:
     uint8_t _gimbal_manager_sysid{0};
     uint8_t _gimbal_manager_compid{0};
 
-    Gimbal::GimbalMode _gimbal_mode{Gimbal::GimbalMode::YawFollow};
     Gimbal::ControlStatus _control_status{Gimbal::ControlMode::None, 0, 0, 0, 0};
     Gimbal::Attitude _attitude{};
     float _vehicle_yaw_rad{NAN};

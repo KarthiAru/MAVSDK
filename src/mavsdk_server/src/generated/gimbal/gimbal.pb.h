@@ -97,24 +97,12 @@ extern SetAnglesRequestDefaultTypeInternal _SetAnglesRequest_default_instance_;
 class SetAnglesResponse;
 struct SetAnglesResponseDefaultTypeInternal;
 extern SetAnglesResponseDefaultTypeInternal _SetAnglesResponse_default_instance_;
-class SetModeRequest;
-struct SetModeRequestDefaultTypeInternal;
-extern SetModeRequestDefaultTypeInternal _SetModeRequest_default_instance_;
-class SetModeResponse;
-struct SetModeResponseDefaultTypeInternal;
-extern SetModeResponseDefaultTypeInternal _SetModeResponse_default_instance_;
-class SetPitchAndYawRequest;
-struct SetPitchAndYawRequestDefaultTypeInternal;
-extern SetPitchAndYawRequestDefaultTypeInternal _SetPitchAndYawRequest_default_instance_;
-class SetPitchAndYawResponse;
-struct SetPitchAndYawResponseDefaultTypeInternal;
-extern SetPitchAndYawResponseDefaultTypeInternal _SetPitchAndYawResponse_default_instance_;
-class SetPitchRateAndYawRateRequest;
-struct SetPitchRateAndYawRateRequestDefaultTypeInternal;
-extern SetPitchRateAndYawRateRequestDefaultTypeInternal _SetPitchRateAndYawRateRequest_default_instance_;
-class SetPitchRateAndYawRateResponse;
-struct SetPitchRateAndYawRateResponseDefaultTypeInternal;
-extern SetPitchRateAndYawRateResponseDefaultTypeInternal _SetPitchRateAndYawRateResponse_default_instance_;
+class SetAngularRatesRequest;
+struct SetAngularRatesRequestDefaultTypeInternal;
+extern SetAngularRatesRequestDefaultTypeInternal _SetAngularRatesRequest_default_instance_;
+class SetAngularRatesResponse;
+struct SetAngularRatesResponseDefaultTypeInternal;
+extern SetAngularRatesResponseDefaultTypeInternal _SetAngularRatesResponse_default_instance_;
 class SetRoiLocationRequest;
 struct SetRoiLocationRequestDefaultTypeInternal;
 extern SetRoiLocationRequestDefaultTypeInternal _SetRoiLocationRequest_default_instance_;
@@ -151,6 +139,7 @@ enum GimbalResult_Result : int {
   GimbalResult_Result_RESULT_TIMEOUT = 3,
   GimbalResult_Result_RESULT_UNSUPPORTED = 4,
   GimbalResult_Result_RESULT_NO_SYSTEM = 5,
+  GimbalResult_Result_RESULT_INVALID_ARGUMENT = 6,
   GimbalResult_Result_GimbalResult_Result_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   GimbalResult_Result_GimbalResult_Result_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -160,8 +149,8 @@ enum GimbalResult_Result : int {
 bool GimbalResult_Result_IsValid(int value);
 extern const uint32_t GimbalResult_Result_internal_data_[];
 constexpr GimbalResult_Result GimbalResult_Result_Result_MIN = static_cast<GimbalResult_Result>(0);
-constexpr GimbalResult_Result GimbalResult_Result_Result_MAX = static_cast<GimbalResult_Result>(5);
-constexpr int GimbalResult_Result_Result_ARRAYSIZE = 5 + 1;
+constexpr GimbalResult_Result GimbalResult_Result_Result_MAX = static_cast<GimbalResult_Result>(6);
+constexpr int GimbalResult_Result_Result_ARRAYSIZE = 6 + 1;
 const ::google::protobuf::EnumDescriptor*
 GimbalResult_Result_descriptor();
 template <typename T>
@@ -174,7 +163,7 @@ const std::string& GimbalResult_Result_Name(T value) {
 template <>
 inline const std::string& GimbalResult_Result_Name(GimbalResult_Result value) {
   return ::google::protobuf::internal::NameOfDenseEnum<GimbalResult_Result_descriptor,
-                                                 0, 5>(
+                                                 0, 6>(
       static_cast<int>(value));
 }
 inline bool GimbalResult_Result_Parse(absl::string_view name, GimbalResult_Result* value) {
@@ -248,6 +237,39 @@ inline bool ControlMode_Parse(absl::string_view name, ControlMode* value) {
   return ::google::protobuf::internal::ParseNamedEnum<ControlMode>(
       ControlMode_descriptor(), name, value);
 }
+enum SendMode : int {
+  SEND_MODE_ONCE = 0,
+  SEND_MODE_STREAM = 1,
+  SendMode_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  SendMode_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool SendMode_IsValid(int value);
+extern const uint32_t SendMode_internal_data_[];
+constexpr SendMode SendMode_MIN = static_cast<SendMode>(0);
+constexpr SendMode SendMode_MAX = static_cast<SendMode>(1);
+constexpr int SendMode_ARRAYSIZE = 1 + 1;
+const ::google::protobuf::EnumDescriptor*
+SendMode_descriptor();
+template <typename T>
+const std::string& SendMode_Name(T value) {
+  static_assert(std::is_same<T, SendMode>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to SendMode_Name().");
+  return SendMode_Name(static_cast<SendMode>(value));
+}
+template <>
+inline const std::string& SendMode_Name(SendMode value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<SendMode_descriptor,
+                                                 0, 1>(
+      static_cast<int>(value));
+}
+inline bool SendMode_Parse(absl::string_view name, SendMode* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SendMode>(
+      SendMode_descriptor(), name, value);
+}
 
 // ===================================================================
 
@@ -313,7 +335,7 @@ class TakeControlRequest final :
                &_TakeControlRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    6;
 
   friend void swap(TakeControlRequest& a, TakeControlRequest& b) {
     a.Swap(&b);
@@ -487,7 +509,7 @@ class SubscribeControlRequest final :
                &_SubscribeControlRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    10;
 
   friend void swap(SubscribeControlRequest& a, SubscribeControlRequest& b) {
     a.Swap(&b);
@@ -623,7 +645,7 @@ class SubscribeAttitudeRequest final :
                &_SubscribeAttitudeRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    16;
 
   friend void swap(SubscribeAttitudeRequest& a, SubscribeAttitudeRequest& b) {
     a.Swap(&b);
@@ -760,7 +782,7 @@ class SetRoiLocationRequest final :
                &_SetRoiLocationRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    4;
 
   friend void swap(SetRoiLocationRequest& a, SetRoiLocationRequest& b) {
     a.Swap(&b);
@@ -900,26 +922,26 @@ class SetRoiLocationRequest final :
   friend struct ::TableStruct_gimbal_2fgimbal_2eproto;
 };// -------------------------------------------------------------------
 
-class SetPitchRateAndYawRateRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetPitchRateAndYawRateRequest) */ {
+class SetAngularRatesRequest final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetAngularRatesRequest) */ {
  public:
-  inline SetPitchRateAndYawRateRequest() : SetPitchRateAndYawRateRequest(nullptr) {}
-  ~SetPitchRateAndYawRateRequest() override;
+  inline SetAngularRatesRequest() : SetAngularRatesRequest(nullptr) {}
+  ~SetAngularRatesRequest() override;
   template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SetPitchRateAndYawRateRequest(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR SetAngularRatesRequest(::google::protobuf::internal::ConstantInitialized);
 
-  inline SetPitchRateAndYawRateRequest(const SetPitchRateAndYawRateRequest& from)
-      : SetPitchRateAndYawRateRequest(nullptr, from) {}
-  SetPitchRateAndYawRateRequest(SetPitchRateAndYawRateRequest&& from) noexcept
-    : SetPitchRateAndYawRateRequest() {
+  inline SetAngularRatesRequest(const SetAngularRatesRequest& from)
+      : SetAngularRatesRequest(nullptr, from) {}
+  SetAngularRatesRequest(SetAngularRatesRequest&& from) noexcept
+    : SetAngularRatesRequest() {
     *this = ::std::move(from);
   }
 
-  inline SetPitchRateAndYawRateRequest& operator=(const SetPitchRateAndYawRateRequest& from) {
+  inline SetAngularRatesRequest& operator=(const SetAngularRatesRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SetPitchRateAndYawRateRequest& operator=(SetPitchRateAndYawRateRequest&& from) noexcept {
+  inline SetAngularRatesRequest& operator=(SetAngularRatesRequest&& from) noexcept {
     if (this == &from) return *this;
     if (GetArena() == from.GetArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -951,20 +973,20 @@ class SetPitchRateAndYawRateRequest final :
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const SetPitchRateAndYawRateRequest& default_instance() {
+  static const SetAngularRatesRequest& default_instance() {
     return *internal_default_instance();
   }
-  static inline const SetPitchRateAndYawRateRequest* internal_default_instance() {
-    return reinterpret_cast<const SetPitchRateAndYawRateRequest*>(
-               &_SetPitchRateAndYawRateRequest_default_instance_);
+  static inline const SetAngularRatesRequest* internal_default_instance() {
+    return reinterpret_cast<const SetAngularRatesRequest*>(
+               &_SetAngularRatesRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    2;
 
-  friend void swap(SetPitchRateAndYawRateRequest& a, SetPitchRateAndYawRateRequest& b) {
+  friend void swap(SetAngularRatesRequest& a, SetAngularRatesRequest& b) {
     a.Swap(&b);
   }
-  inline void Swap(SetPitchRateAndYawRateRequest* other) {
+  inline void Swap(SetAngularRatesRequest* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetArena() != nullptr &&
@@ -977,7 +999,7 @@ class SetPitchRateAndYawRateRequest final :
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SetPitchRateAndYawRateRequest* other) {
+  void UnsafeArenaSwap(SetAngularRatesRequest* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -985,14 +1007,14 @@ class SetPitchRateAndYawRateRequest final :
 
   // implements Message ----------------------------------------------
 
-  SetPitchRateAndYawRateRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SetPitchRateAndYawRateRequest>(arena);
+  SetAngularRatesRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SetAngularRatesRequest>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SetPitchRateAndYawRateRequest& from);
+  void CopyFrom(const SetAngularRatesRequest& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SetPitchRateAndYawRateRequest& from) {
-    SetPitchRateAndYawRateRequest::MergeImpl(*this, from);
+  void MergeFrom( const SetAngularRatesRequest& from) {
+    SetAngularRatesRequest::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
@@ -1010,16 +1032,16 @@ class SetPitchRateAndYawRateRequest final :
   ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
   void SharedCtor(::google::protobuf::Arena* arena);
   void SharedDtor();
-  void InternalSwap(SetPitchRateAndYawRateRequest* other);
+  void InternalSwap(SetAngularRatesRequest* other);
 
   private:
   friend class ::google::protobuf::internal::AnyMetadata;
   static ::absl::string_view FullMessageName() {
-    return "mavsdk.rpc.gimbal.SetPitchRateAndYawRateRequest";
+    return "mavsdk.rpc.gimbal.SetAngularRatesRequest";
   }
   protected:
-  explicit SetPitchRateAndYawRateRequest(::google::protobuf::Arena* arena);
-  SetPitchRateAndYawRateRequest(::google::protobuf::Arena* arena, const SetPitchRateAndYawRateRequest& from);
+  explicit SetAngularRatesRequest(::google::protobuf::Arena* arena);
+  SetAngularRatesRequest(::google::protobuf::Arena* arena, const SetAngularRatesRequest& from);
   public:
 
   static const ClassData _class_data_;
@@ -1032,10 +1054,23 @@ class SetPitchRateAndYawRateRequest final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kPitchRateDegSFieldNumber = 1,
-    kYawRateDegSFieldNumber = 2,
+    kRollRateDegSFieldNumber = 1,
+    kPitchRateDegSFieldNumber = 2,
+    kYawRateDegSFieldNumber = 3,
+    kGimbalModeFieldNumber = 4,
+    kSendModeFieldNumber = 5,
   };
-  // float pitch_rate_deg_s = 1;
+  // float roll_rate_deg_s = 1;
+  void clear_roll_rate_deg_s() ;
+  float roll_rate_deg_s() const;
+  void set_roll_rate_deg_s(float value);
+
+  private:
+  float _internal_roll_rate_deg_s() const;
+  void _internal_set_roll_rate_deg_s(float value);
+
+  public:
+  // float pitch_rate_deg_s = 2;
   void clear_pitch_rate_deg_s() ;
   float pitch_rate_deg_s() const;
   void set_pitch_rate_deg_s(float value);
@@ -1045,7 +1080,7 @@ class SetPitchRateAndYawRateRequest final :
   void _internal_set_pitch_rate_deg_s(float value);
 
   public:
-  // float yaw_rate_deg_s = 2;
+  // float yaw_rate_deg_s = 3;
   void clear_yaw_rate_deg_s() ;
   float yaw_rate_deg_s() const;
   void set_yaw_rate_deg_s(float value);
@@ -1055,360 +1090,7 @@ class SetPitchRateAndYawRateRequest final :
   void _internal_set_yaw_rate_deg_s(float value);
 
   public:
-  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetPitchRateAndYawRateRequest)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      1, 2, 0,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    float pitch_rate_deg_s_;
-    float yaw_rate_deg_s_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_gimbal_2fgimbal_2eproto;
-};// -------------------------------------------------------------------
-
-class SetPitchAndYawRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetPitchAndYawRequest) */ {
- public:
-  inline SetPitchAndYawRequest() : SetPitchAndYawRequest(nullptr) {}
-  ~SetPitchAndYawRequest() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SetPitchAndYawRequest(::google::protobuf::internal::ConstantInitialized);
-
-  inline SetPitchAndYawRequest(const SetPitchAndYawRequest& from)
-      : SetPitchAndYawRequest(nullptr, from) {}
-  SetPitchAndYawRequest(SetPitchAndYawRequest&& from) noexcept
-    : SetPitchAndYawRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline SetPitchAndYawRequest& operator=(const SetPitchAndYawRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SetPitchAndYawRequest& operator=(SetPitchAndYawRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SetPitchAndYawRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SetPitchAndYawRequest* internal_default_instance() {
-    return reinterpret_cast<const SetPitchAndYawRequest*>(
-               &_SetPitchAndYawRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    2;
-
-  friend void swap(SetPitchAndYawRequest& a, SetPitchAndYawRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(SetPitchAndYawRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SetPitchAndYawRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SetPitchAndYawRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SetPitchAndYawRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SetPitchAndYawRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SetPitchAndYawRequest& from) {
-    SetPitchAndYawRequest::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(SetPitchAndYawRequest* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "mavsdk.rpc.gimbal.SetPitchAndYawRequest";
-  }
-  protected:
-  explicit SetPitchAndYawRequest(::google::protobuf::Arena* arena);
-  SetPitchAndYawRequest(::google::protobuf::Arena* arena, const SetPitchAndYawRequest& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kPitchDegFieldNumber = 1,
-    kYawDegFieldNumber = 2,
-  };
-  // float pitch_deg = 1;
-  void clear_pitch_deg() ;
-  float pitch_deg() const;
-  void set_pitch_deg(float value);
-
-  private:
-  float _internal_pitch_deg() const;
-  void _internal_set_pitch_deg(float value);
-
-  public:
-  // float yaw_deg = 2;
-  void clear_yaw_deg() ;
-  float yaw_deg() const;
-  void set_yaw_deg(float value);
-
-  private:
-  float _internal_yaw_deg() const;
-  void _internal_set_yaw_deg(float value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetPitchAndYawRequest)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      1, 2, 0,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    float pitch_deg_;
-    float yaw_deg_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_gimbal_2fgimbal_2eproto;
-};// -------------------------------------------------------------------
-
-class SetModeRequest final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetModeRequest) */ {
- public:
-  inline SetModeRequest() : SetModeRequest(nullptr) {}
-  ~SetModeRequest() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SetModeRequest(::google::protobuf::internal::ConstantInitialized);
-
-  inline SetModeRequest(const SetModeRequest& from)
-      : SetModeRequest(nullptr, from) {}
-  SetModeRequest(SetModeRequest&& from) noexcept
-    : SetModeRequest() {
-    *this = ::std::move(from);
-  }
-
-  inline SetModeRequest& operator=(const SetModeRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SetModeRequest& operator=(SetModeRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SetModeRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SetModeRequest* internal_default_instance() {
-    return reinterpret_cast<const SetModeRequest*>(
-               &_SetModeRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    6;
-
-  friend void swap(SetModeRequest& a, SetModeRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(SetModeRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SetModeRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SetModeRequest* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SetModeRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SetModeRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SetModeRequest& from) {
-    SetModeRequest::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(SetModeRequest* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "mavsdk.rpc.gimbal.SetModeRequest";
-  }
-  protected:
-  explicit SetModeRequest(::google::protobuf::Arena* arena);
-  SetModeRequest(::google::protobuf::Arena* arena, const SetModeRequest& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kGimbalModeFieldNumber = 1,
-  };
-  // .mavsdk.rpc.gimbal.GimbalMode gimbal_mode = 1;
+  // .mavsdk.rpc.gimbal.GimbalMode gimbal_mode = 4;
   void clear_gimbal_mode() ;
   ::mavsdk::rpc::gimbal::GimbalMode gimbal_mode() const;
   void set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value);
@@ -1418,13 +1100,23 @@ class SetModeRequest final :
   void _internal_set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value);
 
   public:
-  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetModeRequest)
+  // .mavsdk.rpc.gimbal.SendMode send_mode = 5;
+  void clear_send_mode() ;
+  ::mavsdk::rpc::gimbal::SendMode send_mode() const;
+  void set_send_mode(::mavsdk::rpc::gimbal::SendMode value);
+
+  private:
+  ::mavsdk::rpc::gimbal::SendMode _internal_send_mode() const;
+  void _internal_set_send_mode(::mavsdk::rpc::gimbal::SendMode value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetAngularRatesRequest)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
+      3, 5, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1441,7 +1133,11 @@ class SetModeRequest final :
                               ::google::protobuf::Arena* arena);
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
+    float roll_rate_deg_s_;
+    float pitch_rate_deg_s_;
+    float yaw_rate_deg_s_;
     int gimbal_mode_;
+    int send_mode_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1584,6 +1280,8 @@ class SetAnglesRequest final :
     kRollDegFieldNumber = 1,
     kPitchDegFieldNumber = 2,
     kYawDegFieldNumber = 3,
+    kGimbalModeFieldNumber = 4,
+    kSendModeFieldNumber = 5,
   };
   // float roll_deg = 1;
   void clear_roll_deg() ;
@@ -1615,13 +1313,33 @@ class SetAnglesRequest final :
   void _internal_set_yaw_deg(float value);
 
   public:
+  // .mavsdk.rpc.gimbal.GimbalMode gimbal_mode = 4;
+  void clear_gimbal_mode() ;
+  ::mavsdk::rpc::gimbal::GimbalMode gimbal_mode() const;
+  void set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value);
+
+  private:
+  ::mavsdk::rpc::gimbal::GimbalMode _internal_gimbal_mode() const;
+  void _internal_set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value);
+
+  public:
+  // .mavsdk.rpc.gimbal.SendMode send_mode = 5;
+  void clear_send_mode() ;
+  ::mavsdk::rpc::gimbal::SendMode send_mode() const;
+  void set_send_mode(::mavsdk::rpc::gimbal::SendMode value);
+
+  private:
+  ::mavsdk::rpc::gimbal::SendMode _internal_send_mode() const;
+  void _internal_set_send_mode(::mavsdk::rpc::gimbal::SendMode value);
+
+  public:
   // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetAnglesRequest)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 0,
+      3, 5, 0,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -1641,6 +1359,8 @@ class SetAnglesRequest final :
     float roll_deg_;
     float pitch_deg_;
     float yaw_deg_;
+    int gimbal_mode_;
+    int send_mode_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1706,7 +1426,7 @@ class ReleaseControlRequest final :
                &_ReleaseControlRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    8;
 
   friend void swap(ReleaseControlRequest& a, ReleaseControlRequest& b) {
     a.Swap(&b);
@@ -1843,7 +1563,7 @@ class Quaternion final :
                &_Quaternion_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    12;
 
   friend void swap(Quaternion& a, Quaternion& b) {
     a.Swap(&b);
@@ -2054,7 +1774,7 @@ class GimbalResult final :
                &_GimbalResult_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    19;
 
   friend void swap(GimbalResult& a, GimbalResult& b) {
     a.Swap(&b);
@@ -2131,6 +1851,7 @@ class GimbalResult final :
   static constexpr Result RESULT_TIMEOUT = GimbalResult_Result_RESULT_TIMEOUT;
   static constexpr Result RESULT_UNSUPPORTED = GimbalResult_Result_RESULT_UNSUPPORTED;
   static constexpr Result RESULT_NO_SYSTEM = GimbalResult_Result_RESULT_NO_SYSTEM;
+  static constexpr Result RESULT_INVALID_ARGUMENT = GimbalResult_Result_RESULT_INVALID_ARGUMENT;
   static inline bool Result_IsValid(int value) {
     return GimbalResult_Result_IsValid(value);
   }
@@ -2271,7 +1992,7 @@ class EulerAngle final :
                &_EulerAngle_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    13;
 
   friend void swap(EulerAngle& a, EulerAngle& b) {
     a.Swap(&b);
@@ -2470,7 +2191,7 @@ class ControlStatus final :
                &_ControlStatus_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    18;
 
   friend void swap(ControlStatus& a, ControlStatus& b) {
     a.Swap(&b);
@@ -2693,7 +2414,7 @@ class AngularVelocityBody final :
                &_AngularVelocityBody_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    14;
 
   friend void swap(AngularVelocityBody& a, AngularVelocityBody& b) {
     a.Swap(&b);
@@ -2892,7 +2613,7 @@ class TakeControlResponse final :
                &_TakeControlResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    7;
 
   friend void swap(TakeControlResponse& a, TakeControlResponse& b) {
     a.Swap(&b);
@@ -3073,7 +2794,7 @@ class SetRoiLocationResponse final :
                &_SetRoiLocationResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    5;
 
   friend void swap(SetRoiLocationResponse& a, SetRoiLocationResponse& b) {
     a.Swap(&b);
@@ -3195,26 +2916,26 @@ class SetRoiLocationResponse final :
   friend struct ::TableStruct_gimbal_2fgimbal_2eproto;
 };// -------------------------------------------------------------------
 
-class SetPitchRateAndYawRateResponse final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse) */ {
+class SetAngularRatesResponse final :
+    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetAngularRatesResponse) */ {
  public:
-  inline SetPitchRateAndYawRateResponse() : SetPitchRateAndYawRateResponse(nullptr) {}
-  ~SetPitchRateAndYawRateResponse() override;
+  inline SetAngularRatesResponse() : SetAngularRatesResponse(nullptr) {}
+  ~SetAngularRatesResponse() override;
   template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SetPitchRateAndYawRateResponse(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR SetAngularRatesResponse(::google::protobuf::internal::ConstantInitialized);
 
-  inline SetPitchRateAndYawRateResponse(const SetPitchRateAndYawRateResponse& from)
-      : SetPitchRateAndYawRateResponse(nullptr, from) {}
-  SetPitchRateAndYawRateResponse(SetPitchRateAndYawRateResponse&& from) noexcept
-    : SetPitchRateAndYawRateResponse() {
+  inline SetAngularRatesResponse(const SetAngularRatesResponse& from)
+      : SetAngularRatesResponse(nullptr, from) {}
+  SetAngularRatesResponse(SetAngularRatesResponse&& from) noexcept
+    : SetAngularRatesResponse() {
     *this = ::std::move(from);
   }
 
-  inline SetPitchRateAndYawRateResponse& operator=(const SetPitchRateAndYawRateResponse& from) {
+  inline SetAngularRatesResponse& operator=(const SetAngularRatesResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SetPitchRateAndYawRateResponse& operator=(SetPitchRateAndYawRateResponse&& from) noexcept {
+  inline SetAngularRatesResponse& operator=(SetAngularRatesResponse&& from) noexcept {
     if (this == &from) return *this;
     if (GetArena() == from.GetArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -3246,201 +2967,20 @@ class SetPitchRateAndYawRateResponse final :
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const SetPitchRateAndYawRateResponse& default_instance() {
+  static const SetAngularRatesResponse& default_instance() {
     return *internal_default_instance();
   }
-  static inline const SetPitchRateAndYawRateResponse* internal_default_instance() {
-    return reinterpret_cast<const SetPitchRateAndYawRateResponse*>(
-               &_SetPitchRateAndYawRateResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    5;
-
-  friend void swap(SetPitchRateAndYawRateResponse& a, SetPitchRateAndYawRateResponse& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(SetPitchRateAndYawRateResponse* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SetPitchRateAndYawRateResponse* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SetPitchRateAndYawRateResponse* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SetPitchRateAndYawRateResponse>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SetPitchRateAndYawRateResponse& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SetPitchRateAndYawRateResponse& from) {
-    SetPitchRateAndYawRateResponse::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(SetPitchRateAndYawRateResponse* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse";
-  }
-  protected:
-  explicit SetPitchRateAndYawRateResponse(::google::protobuf::Arena* arena);
-  SetPitchRateAndYawRateResponse(::google::protobuf::Arena* arena, const SetPitchRateAndYawRateResponse& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kGimbalResultFieldNumber = 1,
-  };
-  // .mavsdk.rpc.gimbal.GimbalResult gimbal_result = 1;
-  bool has_gimbal_result() const;
-  void clear_gimbal_result() ;
-  const ::mavsdk::rpc::gimbal::GimbalResult& gimbal_result() const;
-  PROTOBUF_NODISCARD ::mavsdk::rpc::gimbal::GimbalResult* release_gimbal_result();
-  ::mavsdk::rpc::gimbal::GimbalResult* mutable_gimbal_result();
-  void set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value);
-  void unsafe_arena_set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value);
-  ::mavsdk::rpc::gimbal::GimbalResult* unsafe_arena_release_gimbal_result();
-
-  private:
-  const ::mavsdk::rpc::gimbal::GimbalResult& _internal_gimbal_result() const;
-  ::mavsdk::rpc::gimbal::GimbalResult* _internal_mutable_gimbal_result();
-
-  public:
-  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 1,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    ::mavsdk::rpc::gimbal::GimbalResult* gimbal_result_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_gimbal_2fgimbal_2eproto;
-};// -------------------------------------------------------------------
-
-class SetPitchAndYawResponse final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetPitchAndYawResponse) */ {
- public:
-  inline SetPitchAndYawResponse() : SetPitchAndYawResponse(nullptr) {}
-  ~SetPitchAndYawResponse() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SetPitchAndYawResponse(::google::protobuf::internal::ConstantInitialized);
-
-  inline SetPitchAndYawResponse(const SetPitchAndYawResponse& from)
-      : SetPitchAndYawResponse(nullptr, from) {}
-  SetPitchAndYawResponse(SetPitchAndYawResponse&& from) noexcept
-    : SetPitchAndYawResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline SetPitchAndYawResponse& operator=(const SetPitchAndYawResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SetPitchAndYawResponse& operator=(SetPitchAndYawResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SetPitchAndYawResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SetPitchAndYawResponse* internal_default_instance() {
-    return reinterpret_cast<const SetPitchAndYawResponse*>(
-               &_SetPitchAndYawResponse_default_instance_);
+  static inline const SetAngularRatesResponse* internal_default_instance() {
+    return reinterpret_cast<const SetAngularRatesResponse*>(
+               &_SetAngularRatesResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     3;
 
-  friend void swap(SetPitchAndYawResponse& a, SetPitchAndYawResponse& b) {
+  friend void swap(SetAngularRatesResponse& a, SetAngularRatesResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(SetPitchAndYawResponse* other) {
+  inline void Swap(SetAngularRatesResponse* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetArena() != nullptr &&
@@ -3453,7 +2993,7 @@ class SetPitchAndYawResponse final :
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SetPitchAndYawResponse* other) {
+  void UnsafeArenaSwap(SetAngularRatesResponse* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -3461,14 +3001,14 @@ class SetPitchAndYawResponse final :
 
   // implements Message ----------------------------------------------
 
-  SetPitchAndYawResponse* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SetPitchAndYawResponse>(arena);
+  SetAngularRatesResponse* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<SetAngularRatesResponse>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SetPitchAndYawResponse& from);
+  void CopyFrom(const SetAngularRatesResponse& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SetPitchAndYawResponse& from) {
-    SetPitchAndYawResponse::MergeImpl(*this, from);
+  void MergeFrom( const SetAngularRatesResponse& from) {
+    SetAngularRatesResponse::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
@@ -3486,16 +3026,16 @@ class SetPitchAndYawResponse final :
   ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
   void SharedCtor(::google::protobuf::Arena* arena);
   void SharedDtor();
-  void InternalSwap(SetPitchAndYawResponse* other);
+  void InternalSwap(SetAngularRatesResponse* other);
 
   private:
   friend class ::google::protobuf::internal::AnyMetadata;
   static ::absl::string_view FullMessageName() {
-    return "mavsdk.rpc.gimbal.SetPitchAndYawResponse";
+    return "mavsdk.rpc.gimbal.SetAngularRatesResponse";
   }
   protected:
-  explicit SetPitchAndYawResponse(::google::protobuf::Arena* arena);
-  SetPitchAndYawResponse(::google::protobuf::Arena* arena, const SetPitchAndYawResponse& from);
+  explicit SetAngularRatesResponse(::google::protobuf::Arena* arena);
+  SetAngularRatesResponse(::google::protobuf::Arena* arena, const SetAngularRatesResponse& from);
   public:
 
   static const ClassData _class_data_;
@@ -3525,188 +3065,7 @@ class SetPitchAndYawResponse final :
   ::mavsdk::rpc::gimbal::GimbalResult* _internal_mutable_gimbal_result();
 
   public:
-  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetPitchAndYawResponse)
- private:
-  class _Internal;
-
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 1,
-      0, 2>
-      _table_;
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-
-        inline explicit constexpr Impl_(
-            ::google::protobuf::internal::ConstantInitialized) noexcept;
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena);
-        inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                              ::google::protobuf::Arena* arena, const Impl_& from);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    ::mavsdk::rpc::gimbal::GimbalResult* gimbal_result_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_gimbal_2fgimbal_2eproto;
-};// -------------------------------------------------------------------
-
-class SetModeResponse final :
-    public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:mavsdk.rpc.gimbal.SetModeResponse) */ {
- public:
-  inline SetModeResponse() : SetModeResponse(nullptr) {}
-  ~SetModeResponse() override;
-  template<typename = void>
-  explicit PROTOBUF_CONSTEXPR SetModeResponse(::google::protobuf::internal::ConstantInitialized);
-
-  inline SetModeResponse(const SetModeResponse& from)
-      : SetModeResponse(nullptr, from) {}
-  SetModeResponse(SetModeResponse&& from) noexcept
-    : SetModeResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline SetModeResponse& operator=(const SetModeResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SetModeResponse& operator=(SetModeResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SetModeResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SetModeResponse* internal_default_instance() {
-    return reinterpret_cast<const SetModeResponse*>(
-               &_SetModeResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    7;
-
-  friend void swap(SetModeResponse& a, SetModeResponse& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(SetModeResponse* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr &&
-        GetArena() == other->GetArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SetModeResponse* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SetModeResponse* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SetModeResponse>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SetModeResponse& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom( const SetModeResponse& from) {
-    SetModeResponse::MergeImpl(*this, from);
-  }
-  private:
-  static void MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  ::size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::google::protobuf::internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target, ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  ::google::protobuf::internal::CachedSize* AccessCachedSize() const final;
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(SetModeResponse* other);
-
-  private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() {
-    return "mavsdk.rpc.gimbal.SetModeResponse";
-  }
-  protected:
-  explicit SetModeResponse(::google::protobuf::Arena* arena);
-  SetModeResponse(::google::protobuf::Arena* arena, const SetModeResponse& from);
-  public:
-
-  static const ClassData _class_data_;
-  const ::google::protobuf::Message::ClassData*GetClassData() const final;
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kGimbalResultFieldNumber = 1,
-  };
-  // .mavsdk.rpc.gimbal.GimbalResult gimbal_result = 1;
-  bool has_gimbal_result() const;
-  void clear_gimbal_result() ;
-  const ::mavsdk::rpc::gimbal::GimbalResult& gimbal_result() const;
-  PROTOBUF_NODISCARD ::mavsdk::rpc::gimbal::GimbalResult* release_gimbal_result();
-  ::mavsdk::rpc::gimbal::GimbalResult* mutable_gimbal_result();
-  void set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value);
-  void unsafe_arena_set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value);
-  ::mavsdk::rpc::gimbal::GimbalResult* unsafe_arena_release_gimbal_result();
-
-  private:
-  const ::mavsdk::rpc::gimbal::GimbalResult& _internal_gimbal_result() const;
-  ::mavsdk::rpc::gimbal::GimbalResult* _internal_mutable_gimbal_result();
-
-  public:
-  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetModeResponse)
+  // @@protoc_insertion_point(class_scope:mavsdk.rpc.gimbal.SetAngularRatesResponse)
  private:
   class _Internal;
 
@@ -3978,7 +3337,7 @@ class ReleaseControlResponse final :
                &_ReleaseControlResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    9;
 
   friend void swap(ReleaseControlResponse& a, ReleaseControlResponse& b) {
     a.Swap(&b);
@@ -4159,7 +3518,7 @@ class ControlResponse final :
                &_ControlResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    11;
 
   friend void swap(ControlResponse& a, ControlResponse& b) {
     a.Swap(&b);
@@ -4340,7 +3699,7 @@ class Attitude final :
                &_Attitude_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    15;
 
   friend void swap(Attitude& a, Attitude& b) {
     a.Swap(&b);
@@ -4601,7 +3960,7 @@ class AttitudeResponse final :
                &_AttitudeResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    17;
 
   friend void swap(AttitudeResponse& a, AttitudeResponse& b) {
     a.Swap(&b);
@@ -4808,6 +4167,52 @@ inline void SetAnglesRequest::_internal_set_yaw_deg(float value) {
   _impl_.yaw_deg_ = value;
 }
 
+// .mavsdk.rpc.gimbal.GimbalMode gimbal_mode = 4;
+inline void SetAnglesRequest::clear_gimbal_mode() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.gimbal_mode_ = 0;
+}
+inline ::mavsdk::rpc::gimbal::GimbalMode SetAnglesRequest::gimbal_mode() const {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAnglesRequest.gimbal_mode)
+  return _internal_gimbal_mode();
+}
+inline void SetAnglesRequest::set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value) {
+  _internal_set_gimbal_mode(value);
+  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetAnglesRequest.gimbal_mode)
+}
+inline ::mavsdk::rpc::gimbal::GimbalMode SetAnglesRequest::_internal_gimbal_mode() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return static_cast<::mavsdk::rpc::gimbal::GimbalMode>(_impl_.gimbal_mode_);
+}
+inline void SetAnglesRequest::_internal_set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.gimbal_mode_ = value;
+}
+
+// .mavsdk.rpc.gimbal.SendMode send_mode = 5;
+inline void SetAnglesRequest::clear_send_mode() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.send_mode_ = 0;
+}
+inline ::mavsdk::rpc::gimbal::SendMode SetAnglesRequest::send_mode() const {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAnglesRequest.send_mode)
+  return _internal_send_mode();
+}
+inline void SetAnglesRequest::set_send_mode(::mavsdk::rpc::gimbal::SendMode value) {
+  _internal_set_send_mode(value);
+  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetAnglesRequest.send_mode)
+}
+inline ::mavsdk::rpc::gimbal::SendMode SetAnglesRequest::_internal_send_mode() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return static_cast<::mavsdk::rpc::gimbal::SendMode>(_impl_.send_mode_);
+}
+inline void SetAnglesRequest::_internal_set_send_mode(::mavsdk::rpc::gimbal::SendMode value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.send_mode_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // SetAnglesResponse
@@ -4910,356 +4315,148 @@ inline void SetAnglesResponse::set_allocated_gimbal_result(::mavsdk::rpc::gimbal
 
 // -------------------------------------------------------------------
 
-// SetPitchAndYawRequest
+// SetAngularRatesRequest
 
-// float pitch_deg = 1;
-inline void SetPitchAndYawRequest::clear_pitch_deg() {
+// float roll_rate_deg_s = 1;
+inline void SetAngularRatesRequest::clear_roll_rate_deg_s() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.pitch_deg_ = 0;
+  _impl_.roll_rate_deg_s_ = 0;
 }
-inline float SetPitchAndYawRequest::pitch_deg() const {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetPitchAndYawRequest.pitch_deg)
-  return _internal_pitch_deg();
+inline float SetAngularRatesRequest::roll_rate_deg_s() const {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAngularRatesRequest.roll_rate_deg_s)
+  return _internal_roll_rate_deg_s();
 }
-inline void SetPitchAndYawRequest::set_pitch_deg(float value) {
-  _internal_set_pitch_deg(value);
-  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetPitchAndYawRequest.pitch_deg)
+inline void SetAngularRatesRequest::set_roll_rate_deg_s(float value) {
+  _internal_set_roll_rate_deg_s(value);
+  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetAngularRatesRequest.roll_rate_deg_s)
 }
-inline float SetPitchAndYawRequest::_internal_pitch_deg() const {
+inline float SetAngularRatesRequest::_internal_roll_rate_deg_s() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.pitch_deg_;
+  return _impl_.roll_rate_deg_s_;
 }
-inline void SetPitchAndYawRequest::_internal_set_pitch_deg(float value) {
+inline void SetAngularRatesRequest::_internal_set_roll_rate_deg_s(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
-  _impl_.pitch_deg_ = value;
+  _impl_.roll_rate_deg_s_ = value;
 }
 
-// float yaw_deg = 2;
-inline void SetPitchAndYawRequest::clear_yaw_deg() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.yaw_deg_ = 0;
-}
-inline float SetPitchAndYawRequest::yaw_deg() const {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetPitchAndYawRequest.yaw_deg)
-  return _internal_yaw_deg();
-}
-inline void SetPitchAndYawRequest::set_yaw_deg(float value) {
-  _internal_set_yaw_deg(value);
-  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetPitchAndYawRequest.yaw_deg)
-}
-inline float SetPitchAndYawRequest::_internal_yaw_deg() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.yaw_deg_;
-}
-inline void SetPitchAndYawRequest::_internal_set_yaw_deg(float value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.yaw_deg_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// SetPitchAndYawResponse
-
-// .mavsdk.rpc.gimbal.GimbalResult gimbal_result = 1;
-inline bool SetPitchAndYawResponse::has_gimbal_result() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
-  PROTOBUF_ASSUME(!value || _impl_.gimbal_result_ != nullptr);
-  return value;
-}
-inline void SetPitchAndYawResponse::clear_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (_impl_.gimbal_result_ != nullptr) _impl_.gimbal_result_->Clear();
-  _impl_._has_bits_[0] &= ~0x00000001u;
-}
-inline const ::mavsdk::rpc::gimbal::GimbalResult& SetPitchAndYawResponse::_internal_gimbal_result() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  const ::mavsdk::rpc::gimbal::GimbalResult* p = _impl_.gimbal_result_;
-  return p != nullptr ? *p : reinterpret_cast<const ::mavsdk::rpc::gimbal::GimbalResult&>(::mavsdk::rpc::gimbal::_GimbalResult_default_instance_);
-}
-inline const ::mavsdk::rpc::gimbal::GimbalResult& SetPitchAndYawResponse::gimbal_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetPitchAndYawResponse.gimbal_result)
-  return _internal_gimbal_result();
-}
-inline void SetPitchAndYawResponse::unsafe_arena_set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.gimbal_result_);
-  }
-  _impl_.gimbal_result_ = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(value);
-  if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:mavsdk.rpc.gimbal.SetPitchAndYawResponse.gimbal_result)
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchAndYawResponse::release_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::mavsdk::rpc::gimbal::GimbalResult* released = _impl_.gimbal_result_;
-  _impl_.gimbal_result_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-  released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  if (GetArena() == nullptr) {
-    delete old;
-  }
-#else   // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArena() != nullptr) {
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return released;
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchAndYawResponse::unsafe_arena_release_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  // @@protoc_insertion_point(field_release:mavsdk.rpc.gimbal.SetPitchAndYawResponse.gimbal_result)
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::mavsdk::rpc::gimbal::GimbalResult* temp = _impl_.gimbal_result_;
-  _impl_.gimbal_result_ = nullptr;
-  return temp;
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchAndYawResponse::_internal_mutable_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_._has_bits_[0] |= 0x00000001u;
-  if (_impl_.gimbal_result_ == nullptr) {
-    auto* p = CreateMaybeMessage<::mavsdk::rpc::gimbal::GimbalResult>(GetArena());
-    _impl_.gimbal_result_ = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(p);
-  }
-  return _impl_.gimbal_result_;
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchAndYawResponse::mutable_gimbal_result() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::mavsdk::rpc::gimbal::GimbalResult* _msg = _internal_mutable_gimbal_result();
-  // @@protoc_insertion_point(field_mutable:mavsdk.rpc.gimbal.SetPitchAndYawResponse.gimbal_result)
-  return _msg;
-}
-inline void SetPitchAndYawResponse::set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(_impl_.gimbal_result_);
-  }
-
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(value)->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-
-  _impl_.gimbal_result_ = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(value);
-  // @@protoc_insertion_point(field_set_allocated:mavsdk.rpc.gimbal.SetPitchAndYawResponse.gimbal_result)
-}
-
-// -------------------------------------------------------------------
-
-// SetPitchRateAndYawRateRequest
-
-// float pitch_rate_deg_s = 1;
-inline void SetPitchRateAndYawRateRequest::clear_pitch_rate_deg_s() {
+// float pitch_rate_deg_s = 2;
+inline void SetAngularRatesRequest::clear_pitch_rate_deg_s() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.pitch_rate_deg_s_ = 0;
 }
-inline float SetPitchRateAndYawRateRequest::pitch_rate_deg_s() const {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetPitchRateAndYawRateRequest.pitch_rate_deg_s)
+inline float SetAngularRatesRequest::pitch_rate_deg_s() const {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAngularRatesRequest.pitch_rate_deg_s)
   return _internal_pitch_rate_deg_s();
 }
-inline void SetPitchRateAndYawRateRequest::set_pitch_rate_deg_s(float value) {
+inline void SetAngularRatesRequest::set_pitch_rate_deg_s(float value) {
   _internal_set_pitch_rate_deg_s(value);
-  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetPitchRateAndYawRateRequest.pitch_rate_deg_s)
+  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetAngularRatesRequest.pitch_rate_deg_s)
 }
-inline float SetPitchRateAndYawRateRequest::_internal_pitch_rate_deg_s() const {
+inline float SetAngularRatesRequest::_internal_pitch_rate_deg_s() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.pitch_rate_deg_s_;
 }
-inline void SetPitchRateAndYawRateRequest::_internal_set_pitch_rate_deg_s(float value) {
+inline void SetAngularRatesRequest::_internal_set_pitch_rate_deg_s(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.pitch_rate_deg_s_ = value;
 }
 
-// float yaw_rate_deg_s = 2;
-inline void SetPitchRateAndYawRateRequest::clear_yaw_rate_deg_s() {
+// float yaw_rate_deg_s = 3;
+inline void SetAngularRatesRequest::clear_yaw_rate_deg_s() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.yaw_rate_deg_s_ = 0;
 }
-inline float SetPitchRateAndYawRateRequest::yaw_rate_deg_s() const {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetPitchRateAndYawRateRequest.yaw_rate_deg_s)
+inline float SetAngularRatesRequest::yaw_rate_deg_s() const {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAngularRatesRequest.yaw_rate_deg_s)
   return _internal_yaw_rate_deg_s();
 }
-inline void SetPitchRateAndYawRateRequest::set_yaw_rate_deg_s(float value) {
+inline void SetAngularRatesRequest::set_yaw_rate_deg_s(float value) {
   _internal_set_yaw_rate_deg_s(value);
-  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetPitchRateAndYawRateRequest.yaw_rate_deg_s)
+  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetAngularRatesRequest.yaw_rate_deg_s)
 }
-inline float SetPitchRateAndYawRateRequest::_internal_yaw_rate_deg_s() const {
+inline float SetAngularRatesRequest::_internal_yaw_rate_deg_s() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return _impl_.yaw_rate_deg_s_;
 }
-inline void SetPitchRateAndYawRateRequest::_internal_set_yaw_rate_deg_s(float value) {
+inline void SetAngularRatesRequest::_internal_set_yaw_rate_deg_s(float value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.yaw_rate_deg_s_ = value;
 }
 
-// -------------------------------------------------------------------
-
-// SetPitchRateAndYawRateResponse
-
-// .mavsdk.rpc.gimbal.GimbalResult gimbal_result = 1;
-inline bool SetPitchRateAndYawRateResponse::has_gimbal_result() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
-  PROTOBUF_ASSUME(!value || _impl_.gimbal_result_ != nullptr);
-  return value;
-}
-inline void SetPitchRateAndYawRateResponse::clear_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (_impl_.gimbal_result_ != nullptr) _impl_.gimbal_result_->Clear();
-  _impl_._has_bits_[0] &= ~0x00000001u;
-}
-inline const ::mavsdk::rpc::gimbal::GimbalResult& SetPitchRateAndYawRateResponse::_internal_gimbal_result() const {
-  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  const ::mavsdk::rpc::gimbal::GimbalResult* p = _impl_.gimbal_result_;
-  return p != nullptr ? *p : reinterpret_cast<const ::mavsdk::rpc::gimbal::GimbalResult&>(::mavsdk::rpc::gimbal::_GimbalResult_default_instance_);
-}
-inline const ::mavsdk::rpc::gimbal::GimbalResult& SetPitchRateAndYawRateResponse::gimbal_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse.gimbal_result)
-  return _internal_gimbal_result();
-}
-inline void SetPitchRateAndYawRateResponse::unsafe_arena_set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.gimbal_result_);
-  }
-  _impl_.gimbal_result_ = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(value);
-  if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse.gimbal_result)
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchRateAndYawRateResponse::release_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::mavsdk::rpc::gimbal::GimbalResult* released = _impl_.gimbal_result_;
-  _impl_.gimbal_result_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-  released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  if (GetArena() == nullptr) {
-    delete old;
-  }
-#else   // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArena() != nullptr) {
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return released;
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchRateAndYawRateResponse::unsafe_arena_release_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  // @@protoc_insertion_point(field_release:mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse.gimbal_result)
-
-  _impl_._has_bits_[0] &= ~0x00000001u;
-  ::mavsdk::rpc::gimbal::GimbalResult* temp = _impl_.gimbal_result_;
-  _impl_.gimbal_result_ = nullptr;
-  return temp;
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchRateAndYawRateResponse::_internal_mutable_gimbal_result() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_._has_bits_[0] |= 0x00000001u;
-  if (_impl_.gimbal_result_ == nullptr) {
-    auto* p = CreateMaybeMessage<::mavsdk::rpc::gimbal::GimbalResult>(GetArena());
-    _impl_.gimbal_result_ = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(p);
-  }
-  return _impl_.gimbal_result_;
-}
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetPitchRateAndYawRateResponse::mutable_gimbal_result() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::mavsdk::rpc::gimbal::GimbalResult* _msg = _internal_mutable_gimbal_result();
-  // @@protoc_insertion_point(field_mutable:mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse.gimbal_result)
-  return _msg;
-}
-inline void SetPitchRateAndYawRateResponse::set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(_impl_.gimbal_result_);
-  }
-
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(value)->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    _impl_._has_bits_[0] |= 0x00000001u;
-  } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
-  }
-
-  _impl_.gimbal_result_ = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(value);
-  // @@protoc_insertion_point(field_set_allocated:mavsdk.rpc.gimbal.SetPitchRateAndYawRateResponse.gimbal_result)
-}
-
-// -------------------------------------------------------------------
-
-// SetModeRequest
-
-// .mavsdk.rpc.gimbal.GimbalMode gimbal_mode = 1;
-inline void SetModeRequest::clear_gimbal_mode() {
+// .mavsdk.rpc.gimbal.GimbalMode gimbal_mode = 4;
+inline void SetAngularRatesRequest::clear_gimbal_mode() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.gimbal_mode_ = 0;
 }
-inline ::mavsdk::rpc::gimbal::GimbalMode SetModeRequest::gimbal_mode() const {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetModeRequest.gimbal_mode)
+inline ::mavsdk::rpc::gimbal::GimbalMode SetAngularRatesRequest::gimbal_mode() const {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAngularRatesRequest.gimbal_mode)
   return _internal_gimbal_mode();
 }
-inline void SetModeRequest::set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value) {
+inline void SetAngularRatesRequest::set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value) {
   _internal_set_gimbal_mode(value);
-  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetModeRequest.gimbal_mode)
+  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetAngularRatesRequest.gimbal_mode)
 }
-inline ::mavsdk::rpc::gimbal::GimbalMode SetModeRequest::_internal_gimbal_mode() const {
+inline ::mavsdk::rpc::gimbal::GimbalMode SetAngularRatesRequest::_internal_gimbal_mode() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return static_cast<::mavsdk::rpc::gimbal::GimbalMode>(_impl_.gimbal_mode_);
 }
-inline void SetModeRequest::_internal_set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value) {
+inline void SetAngularRatesRequest::_internal_set_gimbal_mode(::mavsdk::rpc::gimbal::GimbalMode value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
   _impl_.gimbal_mode_ = value;
 }
 
+// .mavsdk.rpc.gimbal.SendMode send_mode = 5;
+inline void SetAngularRatesRequest::clear_send_mode() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.send_mode_ = 0;
+}
+inline ::mavsdk::rpc::gimbal::SendMode SetAngularRatesRequest::send_mode() const {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAngularRatesRequest.send_mode)
+  return _internal_send_mode();
+}
+inline void SetAngularRatesRequest::set_send_mode(::mavsdk::rpc::gimbal::SendMode value) {
+  _internal_set_send_mode(value);
+  // @@protoc_insertion_point(field_set:mavsdk.rpc.gimbal.SetAngularRatesRequest.send_mode)
+}
+inline ::mavsdk::rpc::gimbal::SendMode SetAngularRatesRequest::_internal_send_mode() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return static_cast<::mavsdk::rpc::gimbal::SendMode>(_impl_.send_mode_);
+}
+inline void SetAngularRatesRequest::_internal_set_send_mode(::mavsdk::rpc::gimbal::SendMode value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.send_mode_ = value;
+}
+
 // -------------------------------------------------------------------
 
-// SetModeResponse
+// SetAngularRatesResponse
 
 // .mavsdk.rpc.gimbal.GimbalResult gimbal_result = 1;
-inline bool SetModeResponse::has_gimbal_result() const {
+inline bool SetAngularRatesResponse::has_gimbal_result() const {
   bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
   PROTOBUF_ASSUME(!value || _impl_.gimbal_result_ != nullptr);
   return value;
 }
-inline void SetModeResponse::clear_gimbal_result() {
+inline void SetAngularRatesResponse::clear_gimbal_result() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   if (_impl_.gimbal_result_ != nullptr) _impl_.gimbal_result_->Clear();
   _impl_._has_bits_[0] &= ~0x00000001u;
 }
-inline const ::mavsdk::rpc::gimbal::GimbalResult& SetModeResponse::_internal_gimbal_result() const {
+inline const ::mavsdk::rpc::gimbal::GimbalResult& SetAngularRatesResponse::_internal_gimbal_result() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   const ::mavsdk::rpc::gimbal::GimbalResult* p = _impl_.gimbal_result_;
   return p != nullptr ? *p : reinterpret_cast<const ::mavsdk::rpc::gimbal::GimbalResult&>(::mavsdk::rpc::gimbal::_GimbalResult_default_instance_);
 }
-inline const ::mavsdk::rpc::gimbal::GimbalResult& SetModeResponse::gimbal_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetModeResponse.gimbal_result)
+inline const ::mavsdk::rpc::gimbal::GimbalResult& SetAngularRatesResponse::gimbal_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:mavsdk.rpc.gimbal.SetAngularRatesResponse.gimbal_result)
   return _internal_gimbal_result();
 }
-inline void SetModeResponse::unsafe_arena_set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
+inline void SetAngularRatesResponse::unsafe_arena_set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.gimbal_result_);
@@ -5270,9 +4467,9 @@ inline void SetModeResponse::unsafe_arena_set_allocated_gimbal_result(::mavsdk::
   } else {
     _impl_._has_bits_[0] &= ~0x00000001u;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:mavsdk.rpc.gimbal.SetModeResponse.gimbal_result)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:mavsdk.rpc.gimbal.SetAngularRatesResponse.gimbal_result)
 }
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetModeResponse::release_gimbal_result() {
+inline ::mavsdk::rpc::gimbal::GimbalResult* SetAngularRatesResponse::release_gimbal_result() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
 
   _impl_._has_bits_[0] &= ~0x00000001u;
@@ -5291,16 +4488,16 @@ inline ::mavsdk::rpc::gimbal::GimbalResult* SetModeResponse::release_gimbal_resu
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return released;
 }
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetModeResponse::unsafe_arena_release_gimbal_result() {
+inline ::mavsdk::rpc::gimbal::GimbalResult* SetAngularRatesResponse::unsafe_arena_release_gimbal_result() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  // @@protoc_insertion_point(field_release:mavsdk.rpc.gimbal.SetModeResponse.gimbal_result)
+  // @@protoc_insertion_point(field_release:mavsdk.rpc.gimbal.SetAngularRatesResponse.gimbal_result)
 
   _impl_._has_bits_[0] &= ~0x00000001u;
   ::mavsdk::rpc::gimbal::GimbalResult* temp = _impl_.gimbal_result_;
   _impl_.gimbal_result_ = nullptr;
   return temp;
 }
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetModeResponse::_internal_mutable_gimbal_result() {
+inline ::mavsdk::rpc::gimbal::GimbalResult* SetAngularRatesResponse::_internal_mutable_gimbal_result() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_._has_bits_[0] |= 0x00000001u;
   if (_impl_.gimbal_result_ == nullptr) {
@@ -5309,12 +4506,12 @@ inline ::mavsdk::rpc::gimbal::GimbalResult* SetModeResponse::_internal_mutable_g
   }
   return _impl_.gimbal_result_;
 }
-inline ::mavsdk::rpc::gimbal::GimbalResult* SetModeResponse::mutable_gimbal_result() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline ::mavsdk::rpc::gimbal::GimbalResult* SetAngularRatesResponse::mutable_gimbal_result() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::mavsdk::rpc::gimbal::GimbalResult* _msg = _internal_mutable_gimbal_result();
-  // @@protoc_insertion_point(field_mutable:mavsdk.rpc.gimbal.SetModeResponse.gimbal_result)
+  // @@protoc_insertion_point(field_mutable:mavsdk.rpc.gimbal.SetAngularRatesResponse.gimbal_result)
   return _msg;
 }
-inline void SetModeResponse::set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
+inline void SetAngularRatesResponse::set_allocated_gimbal_result(::mavsdk::rpc::gimbal::GimbalResult* value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   if (message_arena == nullptr) {
@@ -5332,7 +4529,7 @@ inline void SetModeResponse::set_allocated_gimbal_result(::mavsdk::rpc::gimbal::
   }
 
   _impl_.gimbal_result_ = reinterpret_cast<::mavsdk::rpc::gimbal::GimbalResult*>(value);
-  // @@protoc_insertion_point(field_set_allocated:mavsdk.rpc.gimbal.SetModeResponse.gimbal_result)
+  // @@protoc_insertion_point(field_set_allocated:mavsdk.rpc.gimbal.SetAngularRatesResponse.gimbal_result)
 }
 
 // -------------------------------------------------------------------
@@ -6925,6 +6122,12 @@ struct is_proto_enum<::mavsdk::rpc::gimbal::ControlMode> : std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor<::mavsdk::rpc::gimbal::ControlMode>() {
   return ::mavsdk::rpc::gimbal::ControlMode_descriptor();
+}
+template <>
+struct is_proto_enum<::mavsdk::rpc::gimbal::SendMode> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::mavsdk::rpc::gimbal::SendMode>() {
+  return ::mavsdk::rpc::gimbal::SendMode_descriptor();
 }
 
 }  // namespace protobuf

@@ -102,6 +102,32 @@ public:
         }
     }
 
+    static rpc::gimbal::SendMode translateToRpcSendMode(const mavsdk::Gimbal::SendMode& send_mode)
+    {
+        switch (send_mode) {
+            default:
+                LogErr() << "Unknown send_mode enum value: " << static_cast<int>(send_mode);
+            // FALLTHROUGH
+            case mavsdk::Gimbal::SendMode::Once:
+                return rpc::gimbal::SEND_MODE_ONCE;
+            case mavsdk::Gimbal::SendMode::Stream:
+                return rpc::gimbal::SEND_MODE_STREAM;
+        }
+    }
+
+    static mavsdk::Gimbal::SendMode translateFromRpcSendMode(const rpc::gimbal::SendMode send_mode)
+    {
+        switch (send_mode) {
+            default:
+                LogErr() << "Unknown send_mode enum value: " << static_cast<int>(send_mode);
+            // FALLTHROUGH
+            case rpc::gimbal::SEND_MODE_ONCE:
+                return mavsdk::Gimbal::SendMode::Once;
+            case rpc::gimbal::SEND_MODE_STREAM:
+                return mavsdk::Gimbal::SendMode::Stream;
+        }
+    }
+
     static std::unique_ptr<rpc::gimbal::Quaternion>
     translateToRpcQuaternion(const mavsdk::Gimbal::Quaternion& quaternion)
     {
@@ -289,6 +315,8 @@ public:
                 return rpc::gimbal::GimbalResult_Result_RESULT_UNSUPPORTED;
             case mavsdk::Gimbal::Result::NoSystem:
                 return rpc::gimbal::GimbalResult_Result_RESULT_NO_SYSTEM;
+            case mavsdk::Gimbal::Result::InvalidArgument:
+                return rpc::gimbal::GimbalResult_Result_RESULT_INVALID_ARGUMENT;
         }
     }
 
@@ -311,6 +339,8 @@ public:
                 return mavsdk::Gimbal::Result::Unsupported;
             case rpc::gimbal::GimbalResult_Result_RESULT_NO_SYSTEM:
                 return mavsdk::Gimbal::Result::NoSystem;
+            case rpc::gimbal::GimbalResult_Result_RESULT_INVALID_ARGUMENT:
+                return mavsdk::Gimbal::Result::InvalidArgument;
         }
     }
 
@@ -334,7 +364,11 @@ public:
         }
 
         auto result = _lazy_plugin.maybe_plugin()->set_angles(
-            request->roll_deg(), request->pitch_deg(), request->yaw_deg());
+            request->roll_deg(),
+            request->pitch_deg(),
+            request->yaw_deg(),
+            translateFromRpcGimbalMode(request->gimbal_mode()),
+            translateFromRpcSendMode(request->send_mode()));
 
         if (response != nullptr) {
             fillResponseWithResult(response, result);
@@ -343,10 +377,10 @@ public:
         return grpc::Status::OK;
     }
 
-    grpc::Status SetPitchAndYaw(
+    grpc::Status SetAngularRates(
         grpc::ServerContext* /* context */,
-        const rpc::gimbal::SetPitchAndYawRequest* request,
-        rpc::gimbal::SetPitchAndYawResponse* response) override
+        const rpc::gimbal::SetAngularRatesRequest* request,
+        rpc::gimbal::SetAngularRatesResponse* response) override
     {
         if (_lazy_plugin.maybe_plugin() == nullptr) {
             if (response != nullptr) {
@@ -358,70 +392,16 @@ public:
         }
 
         if (request == nullptr) {
-            LogWarn() << "SetPitchAndYaw sent with a null request! Ignoring...";
+            LogWarn() << "SetAngularRates sent with a null request! Ignoring...";
             return grpc::Status::OK;
         }
 
-        auto result = _lazy_plugin.maybe_plugin()->set_pitch_and_yaw(
-            request->pitch_deg(), request->yaw_deg());
-
-        if (response != nullptr) {
-            fillResponseWithResult(response, result);
-        }
-
-        return grpc::Status::OK;
-    }
-
-    grpc::Status SetPitchRateAndYawRate(
-        grpc::ServerContext* /* context */,
-        const rpc::gimbal::SetPitchRateAndYawRateRequest* request,
-        rpc::gimbal::SetPitchRateAndYawRateResponse* response) override
-    {
-        if (_lazy_plugin.maybe_plugin() == nullptr) {
-            if (response != nullptr) {
-                auto result = mavsdk::Gimbal::Result::NoSystem;
-                fillResponseWithResult(response, result);
-            }
-
-            return grpc::Status::OK;
-        }
-
-        if (request == nullptr) {
-            LogWarn() << "SetPitchRateAndYawRate sent with a null request! Ignoring...";
-            return grpc::Status::OK;
-        }
-
-        auto result = _lazy_plugin.maybe_plugin()->set_pitch_rate_and_yaw_rate(
-            request->pitch_rate_deg_s(), request->yaw_rate_deg_s());
-
-        if (response != nullptr) {
-            fillResponseWithResult(response, result);
-        }
-
-        return grpc::Status::OK;
-    }
-
-    grpc::Status SetMode(
-        grpc::ServerContext* /* context */,
-        const rpc::gimbal::SetModeRequest* request,
-        rpc::gimbal::SetModeResponse* response) override
-    {
-        if (_lazy_plugin.maybe_plugin() == nullptr) {
-            if (response != nullptr) {
-                auto result = mavsdk::Gimbal::Result::NoSystem;
-                fillResponseWithResult(response, result);
-            }
-
-            return grpc::Status::OK;
-        }
-
-        if (request == nullptr) {
-            LogWarn() << "SetMode sent with a null request! Ignoring...";
-            return grpc::Status::OK;
-        }
-
-        auto result = _lazy_plugin.maybe_plugin()->set_mode(
-            translateFromRpcGimbalMode(request->gimbal_mode()));
+        auto result = _lazy_plugin.maybe_plugin()->set_angular_rates(
+            request->roll_rate_deg_s(),
+            request->pitch_rate_deg_s(),
+            request->yaw_rate_deg_s(),
+            translateFromRpcGimbalMode(request->gimbal_mode()),
+            translateFromRpcSendMode(request->send_mode()));
 
         if (response != nullptr) {
             fillResponseWithResult(response, result);
