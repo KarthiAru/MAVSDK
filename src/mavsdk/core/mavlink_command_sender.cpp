@@ -343,7 +343,23 @@ void MavlinkCommandSender::receive_timeout(const CommandIdentification& identifi
             }
         } else {
             // We have tried retransmitting, giving up now.
-            LogErr() << "Retrying failed (" << work->identification.command << ")";
+            if (work->identification.command == 512) {
+                uint8_t target_sysid;
+                uint8_t target_compid;
+                if (auto command_int = std::get_if<CommandInt>(&work->command)) {
+                    target_sysid = command_int->target_system_id;
+                    target_compid = command_int->target_component_id;
+                } else if (auto command_long = std::get_if<CommandLong>(&work->command)) {
+                    target_sysid = command_long->target_system_id;
+                    target_compid = command_long->target_component_id;
+                }
+                LogErr() << "Retrying failed for REQUEST_MESSAGE command for message: "
+                         << work->identification.maybe_param1 << ", to ("
+                         << std::to_string(target_sysid) << "/" << std::to_string(target_compid)
+                         << ")";
+            } else {
+                LogErr() << "Retrying failed for command: " << work->identification.command << ")";
+            }
 
             temp_callback = work->callback;
             temp_result = {Result::Timeout, NAN};
